@@ -3,17 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo AI Operating System</title>
+    <title>Solo AI Operating System - Master Workspace</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
-        textarea { width: 100%; height: 200px; background: #1e1e1e; color: #00ff00; border: 1px solid #333; border-radius: 8px; padding: 10px; }
-        button { background: #0070f3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0d1117; color: #c9d1d9; padding: 15px; }
+        .container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        header { border-bottom: 1px solid #30363d; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { color: #58a6ff; font-size: 1.5rem; }
+        .badge { background: #238636; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; }
+        .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 15px; }
+        .grid-keys { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        @media (max-width: 600px) { .grid-keys { grid-template-columns: 1fr; } }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85rem; color: #8b949e; }
+        input, textarea { width: 100%; background: #0d1117; color: #58a6ff; border: 1px solid #30363d; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 0.9rem; }
+        input:focus, textarea:focus { border-color: #58a6ff; outline: none; }
+        textarea { height: 120px; resize: vertical; color: #c9d1d9; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { background: #238636; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        button:hover { background: #2ea043; }
+        button.btn-sec { background: #21262d; border: 1px solid #30363d; }
+        button.btn-sec:hover { background: #30363d; }
+        .output-box { background: #000; border: 1px solid #30363d; border-radius: 6px; padding: 12px; min-height: 140px; font-family: monospace; color: #3fb950; white-space: pre-wrap; word-break: break-word; font-size: 0.85rem; margin-top: 10px; }
+        .status-msg { font-size: 0.8rem; margin-top: 5px; color: #8b949e; }
     </style>
 </head>
 <body>
-    <h1>🚀 Solo AI OS Environment</h1>
-    <p>आपका नो-कोड Replit वर्कस्पेस तैयार है!</p>
-    <textarea placeholder="अपना कोड या प्रॉम्ट यहाँ लिखें..."></textarea><br>
-    <button onclick="alert('सिस्टम चालू है!')">Run / Execute</button>
+    <div class="container">
+        <header>
+            <h1>🚀 Solo AI Operating System</h1>
+            <span class="badge">Live & Guarded</span>
+        </header>
+
+        <!-- API Vault Section -->
+        <div class="card">
+            <label style="color: #58a6ff; font-size: 1rem;">🔐 API Keys Vault (सुरक्षित स्थानीय स्टोरेज)</label>
+            <p class="status-msg">आपकी सभी कीज़ केवल आपके फोन/ब्राउज़र में सुरक्षित रहेंगी।</p>
+           
+            <div class="grid-keys">
+                <div>
+                    <label for="geminiKey">1. Gemini API Key:</label>
+                    <input type="password" id="geminiKey" placeholder="Gemini की पेस्ट करें...">
+                </div>
+                <div>
+                    <label for="githubToken">2. GitHub Access Token:</label>
+                    <input type="password" id="githubToken" placeholder="GitHub टोकन पेस्ट करें...">
+                </div>
+                <div>
+                    <label for="openrouterKey">3. OpenRouter API Key:</label>
+                    <input type="password" id="openrouterKey" placeholder="OpenRouter की पेस्ट करें...">
+                </div>
+                <div>
+                    <label for="supabaseKey">4. Supabase Key / URL:</label>
+                    <input type="password" id="supabaseKey" placeholder="Supabase की पेस्ट करें...">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="saveKeys()">💾 Save All Keys</button>
+                <button class="btn-sec" onclick="clearKeys()">🗑️ Clear Keys</button>
+            </div>
+            <div id="vaultStatus" class="status-msg"></div>
+        </div>
+
+        <!-- AI Task Workspace -->
+        <div class="card">
+            <label for="userPrompt" style="color: #58a6ff; font-size: 1rem;">📝 AI Command Workspace:</label>
+            <textarea id="userPrompt" placeholder="AI को कोई टास्क दें... (उदा: 'मुझे एक Python ऑटोमेशन स्क्रिप्ट लिखकर दो')"></textarea>
+            <div class="btn-group">
+                <button onclick="runAITask()">▶ Execute Task</button>
+            </div>
+        </div>
+
+        <!-- Output Console -->
+        <div class="card">
+            <label style="color: #8b949e;">💻 Terminal / Console Output:</label>
+            <div id="consoleOutput" class="output-box">सिस्टम तैयार है... API Keys सेव करके अपना पहला टास्क रन करें।</div>
+        </div>
+    </div>
+
+    <script>
+        // ऑटो-लोड सेव की गई Keys
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("SOLO_GEMINI_KEY")) document.getElementById("geminiKey").value = localStorage.getItem("SOLO_GEMINI_KEY");
+            if (localStorage.getItem("SOLO_GITHUB_TOKEN")) document.getElementById("githubToken").value = localStorage.getItem("SOLO_GITHUB_TOKEN");
+            if (localStorage.getItem("SOLO_OPENROUTER_KEY")) document.getElementById("openrouterKey").value = localStorage.getItem("SOLO_OPENROUTER_KEY");
+            if (localStorage.getItem("SOLO_SUPABASE_KEY")) document.getElementById("supabaseKey").value = localStorage.getItem("SOLO_SUPABASE_KEY");
+        });
+
+        function saveKeys() {
+            localStorage.setItem("SOLO_GEMINI_KEY", document.getElementById("geminiKey").value.trim());
+            localStorage.setItem("SOLO_GITHUB_TOKEN", document.getElementById("githubToken").value.trim());
+            localStorage.setItem("SOLO_OPENROUTER_KEY", document.getElementById("openrouterKey").value.trim());
+            localStorage.setItem("SOLO_SUPABASE_KEY", document.getElementById("supabaseKey").value.trim());
+           
+            const status = document.getElementById("vaultStatus");
+            status.style.color = "#3fb950";
+            status.innerText = "✅ सभी API Keys आपके ब्राउज़र में सफलतापूर्वक सेव हो गईं!";
+        }
+
+        function clearKeys() {
+            localStorage.clear();
+            document.getElementById("geminiKey").value = "";
+            document.getElementById("githubToken").value = "";
+            document.getElementById("openrouterKey").value = "";
+            document.getElementById("supabaseKey").value = "";
+           
+            const status = document.getElementById("vaultStatus");
+            status.style.color = "#f85149";
+            status.innerText = "🗑️ सभी Keys साफ़ कर दी गईं।";
+        }
+
+        async function runAITask() {
+            const key = document.getElementById("geminiKey").value.trim();
+            const prompt = document.getElementById("userPrompt").value.trim();
+            const consoleBox = document.getElementById("consoleOutput");
+
+            if (!key) {
+                consoleBox.style.color = "#f85149";
+                consoleBox.innerText = "⚠️ त्रुटि: कृपया 'Gemini API Key' दर्ज करें और Save Keys पर क्लिक करें!";
+                return;
+            }
+
+            if (!prompt) {
+                consoleBox.style.color = "#f85149";
+                consoleBox.innerText = "⚠️ त्रुटि: कृपया कोई टास्क या प्रॉम्ट लिखें!";
+                return;
+            }
+
+            consoleBox.style.color = "#e3b341";
+            consoleBox.innerText = "🔄 AI टास्क पर काम कर रहा है...";
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    consoleBox.style.color = "#f85149";
+                    consoleBox.innerText = "❌ API Error: " + data.error.message;
+                } else {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    consoleBox.style.color = "#3fb950";
+                    consoleBox.innerText = aiText;
+                }
+            } catch (err) {
+                consoleBox.style.color = "#f85149";
+                consoleBox.innerText = "❌ Network Error: " + err.message;
+            }
+        }
+    </script>
 </body>
 </html> 
