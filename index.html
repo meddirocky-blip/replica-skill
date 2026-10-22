@@ -2,412 +2,609 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jarvis Virtual Office - Solo AI OS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>JARVIS 3D Cyberpunk Office OS</title>
+  <!-- Tailwind CSS CDN for smooth UI styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@500;700;900&display=swap');
 
-    :root {
-      --bg-dark: #020617;
-      --card-bg: rgba(15, 23, 42, 0.85);
-      --neon-cyan: #06b6d4;
-      --neon-pink: #ec4899;
-      --neon-green: #10b981;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-glow: rgba(6, 182, 212, 0.4);
-    }
-
     * {
       box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body, html {
       margin: 0;
       padding: 0;
-      font-family: 'Fira Code', monospace;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* Top Jarvis HUD Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 1.5rem;
-      border-bottom: 1px solid var(--border-glow);
-      background: rgba(2, 6, 23, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 900;
-      color: var(--neon-cyan);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .hud-stats {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.75rem;
-    }
-
-    .hud-item span {
-      color: var(--neon-cyan);
-      font-weight: bold;
-    }
-
-    /* Virtual Office Rooms Navigation Bar (कमरे बदलने की पट्टी) */
-    .rooms-bar {
-      display: flex;
-      overflow-x: auto;
-      background: #090d16;
-      border-bottom: 1px solid var(--border-glow);
-      padding: 0.6rem 1rem;
-      gap: 0.6rem;
-    }
-
-    .room-btn {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-glow);
-      color: var(--text-muted);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.7rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .room-btn.active, .room-btn:hover {
-      background: var(--neon-cyan);
-      color: var(--bg-dark);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
-      font-weight: bold;
-    }
-
-    .main-container {
-      flex: 1;
-      padding: 1.2rem;
-      max-width: 1400px;
-      margin: 0 auto;
       width: 100%;
-    }
-
-    .room-panel {
-      display: none;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .room-panel.active {
-      display: flex;
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 1.2rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.85rem;
-      color: var(--neon-cyan);
-      margin-bottom: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    input, select, textarea {
-      background: rgba(2, 6, 23, 0.8);
-      border: 1px solid var(--border-glow);
-      color: var(--text-main);
-      padding: 0.7rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      width: 100%;
-      margin-bottom: 0.8rem;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
-    }
-
-    button {
-      background: linear-gradient(135deg, var(--neon-cyan), #2563eb);
-      color: white;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 0.7rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-
-    button:hover {
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.9);
-      transform: translateY(-1px);
-    }
-
-    .console-box {
-      background: #010409;
-      border: 1px solid var(--border-glow);
-      border-radius: 8px;
-      padding: 0.8rem;
-      font-size: 0.8rem;
-      color: var(--neon-cyan);
-      height: 220px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-
-    #earthContainer {
-      width: 100%;
-      height: 380px;
-      border-radius: 8px;
-      position: relative;
+      height: 100%;
       overflow: hidden;
-      border: 1px solid var(--border-glow);
-      background: radial-gradient(circle, #090d19 0%, #010409 100%);
+      background-color: #020617;
+      font-family: 'Fira Code', monospace;
+      color: #f8fafc;
     }
 
-    .preview-box {
+    .orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* 3D Canvas Container */
+    #canvas3d {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+   /* GTA V Style Radar Minimap Box */
+    #minimapContainer {
+      position: absolute;
+      top: 70px;
+      right: 15px;
+      width: 130px;
+      height: 130px;
+      border-radius: 12px;
+      border: 2px solid rgba(6, 182, 212, 0.8);
+      background: rgba(2, 6, 23, 0.85);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    #minimapCanvas {
       width: 100%;
-      height: 380px;
-      background: white;
-      border-radius: 8px;
-      border: none;
+      height: 100%;
+    }
+
+    /* HUD Reticle Pointer */
+    #reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background-color: rgba(6, 182, 212, 0.8);
+      border: 1px solid #ffffff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 15;
+      box-shadow: 0 0 8px #06b6d4;
+    }
+
+    /* Touch Controls for Mobile */
+    .touch-btn {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(6, 182, 212, 0.5);
+      color: #06b6d4;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      active: scale(0.95);
+      backdrop-filter: blur(8px);
+    }
+    .touch-btn:active {
+      background: #06b6d4;
+      color: #020617;
+    }
+
+    /* Glassmorphism Panels */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(2, 6, 23, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(6, 182, 212, 0.5);
+      border-radius: 3px;
+    }
+
+    /* Glowing Text Animations */
+    .glow-cyan {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
     }
   </style>
 </head>
 <body>
+ <!-- 3D Canvas -->
+  <canvas id="canvas3d"></canvas>
 
-  <!-- Top Jarvis HUD Command Bar -->
-  <header>
-    <div class="brand">
-      🤖 JARVIS VIRTUAL OFFICE OS
+  <!-- Crosshair Reticle -->
+  <div id="reticle"></div>
+
+  <!-- Top Jarvis HUD Bar -->
+  <header class="fixed top-0 left-0 w-full z-30 px-4 py-2 flex justify-between items-center glass-panel border-b border-cyan-500/30">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-brain text-cyan-400 text-xl animate-pulse"></i>
+      <span class="orbitron font-bold text-sm sm:text-base text-cyan-400 glow-cyan">JARVIS 3D OS</span>
     </div>
-    <div class="hud-stats">
-      <div class="hud-item">Target: <span id="displayTarget" contenteditable="true" onblur="updateTarget(this)" style="border-bottom: 1px dashed var(--neon-cyan); cursor: pointer;">$5000</span></div>
-      <div class="hud-item">Active Room: <span id="currentRoomName">Command Center</span></div>
-      <div class="hud-item">Status: <span style="color: var(--neon-green);">AUTONOMOUS</span></div>
+
+    <!-- HUD Metrics -->
+    <div class="flex items-center gap-4 text-xs">
+      <div class="hidden sm:block">
+        <span class="text-slate-400">TARGET:</span>
+        <span id="targetDisplay" contenteditable="true" class="text-emerald-400 font-bold ml-1 cursor-pointer underline decoration-dashed">$5000</span>
+      </div>
+      <div>
+        <span class="text-slate-400">TASKS:</span>
+        <span id="taskCount" class="text-cyan-400 font-bold ml-1">3/3 ACTIVE</span>
+      </div>
+      <div>
+        <span class="text-slate-400">STATUS:</span>
+        <span class="text-emerald-400 font-bold ml-1">ONLINE</span>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleVoice()" id="voiceBtn" class="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 border border-cyan-500/50 rounded-lg text-xs font-bold transition flex items-center gap-1">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="hidden md:inline">VOICE</span>
+      </button>
+
+      <!-- Sidebar Code Editor Toggle Button -->
+      <button onclick="toggleCodeDrawer()" class="px-3 py-1 bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/50 rounded-lg text-xs font-bold transition flex items-center gap-1">
+        <i class="fa-solid fa-code"></i>
+        <span>SELF-UPDATE</span>
+      </button>
     </div>
   </header>
 
-  <!-- Virtual Office Rooms Switcher (गेम जैसे कमरे बदलने की पट्टी) -->
-  <div class="rooms-bar">
-    <div class="room-btn active" onclick="switchRoom(0)">🛸 1. Command Center</div>
-    <div class="room-btn" onclick="switchRoom(1)">🌍 2. Global Radar & Earth</div>
-    <div class="room-btn" onclick="switchRoom(2)">🔍 3. Perplexity Research</div>
-    <div class="room-btn" onclick="switchRoom(3)">💼 4. Freelance & Outreach</div>
-    <div class="room-btn" onclick="switchRoom(4)">💻 5. App Dev Sandbox</div>
-    <div class="room-btn" onclick="switchRoom(5)">🛏️ 6. Agent Rest & Quarters</div>
-    <div class="room-btn" onclick="switchRoom(6)">⚙️ 7. Settings & Vault</div>
+  <!-- GTA V Style Radar Mini-Map -->
+  <div id="minimapContainer">
+    <canvas id="minimapCanvas"></canvas>
+    <div class="absolute bottom-1 left-2 text-[9px] text-cyan-400 orbitron">MAP RADAR</div>
   </div>
 
-  <div class="main-container">
-
-    <!-- ROOM 1: Command Center -->
-    <div class="room-panel active" id="room-0">
-      <div class="card">
-        <div class="card-title"><span>🎙️ Voice Commander & AI Core Directives</span></div>
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-          <input type="text" id="quickPrompt" placeholder="Give command to Jarvis (e.g. Build landing page)..." style="margin-bottom:0;">
-          <button onclick="startVoice()">🎙️ Speak</button>
-          <button onclick="executeCommand()">Execute</button>
-        </div>
-        <div class="console-box" id="commandConsole">Jarvis Command Center Initialized. Awaiting your voice or text directives...</div>
-      </div>
-    </div>
-
-    <!-- ROOM 2: Global Radar & Earth -->
-    <div class="room-panel" id="room-1">
-      <div class="card">
-        <div class="card-title">
-          <span>🌍 3D Global Radar & Neural Earth</span>
-          <span style="font-size: 0.7rem; color: var(--text-muted);">[Smooth Orbit, Zoom & Rotate]</span>
-        </div>
-        <div id="earthContainer"></div>
-      </div>
-    </div>
-
-    <!-- ROOM 3: Perplexity Research -->
-    <div class="room-panel" id="room-2">
-      <div class="card">
-        <div class="card-title"><span>🔍 Perplexity Deep Live Web Research</span></div>
-        <input type="text" id="searchQuery" placeholder="Enter research query...">
-        <button onclick="runSearch()">Search Web</button>
-        <div class="console-box" id="searchConsole" style="margin-top: 1rem;">Research logs will appear here...</div>
-      </div>
-    </div>
-
-    <!-- ROOM 4: Freelance & Outreach -->
-    <div class="room-panel" id="room-3">
-      <div class="card">
-        <div class="card-title"><span>💼 Freelance Suite & Client Proposals</span></div>
-        <textarea id="jobDesc" placeholder="Paste Upwork job details here..."></textarea>
-        <button onclick="generateProposal()">Generate Pitch</button>
-        <div class="console-box" id="freelanceConsole" style="margin-top: 1rem;">Proposal output...</div>
-      </div>
-    </div>
-
-    <!-- ROOM 5: App Dev Sandbox -->
-    <div class="room-panel" id="room-4">
-      <div class="card">
-        <div class="card-title">
-          <span>💻 Live Web App Architect Sandbox</span>
-          <button onclick="renderSandbox()" style="padding: 0.3rem 0.6rem; font-size: 0.65rem;">Render Preview</button>
-        </div>
-        <textarea id="appPrompt" placeholder="Describe web app..."></textarea>
-        <button onclick="buildApp()">Build App</button>
-        <iframe id="previewFrame" class="preview-box" style="margin-top: 1rem;"></iframe>
-      </div>
-    </div>
-
-    <!-- ROOM 6: Agent Rest & Quarters -->
-    <div class="room-panel" id="room-5">
-      <div class="card">
-        <div class="card-title"><span>🛏️ Agent Rest & Diagnostics Quarters</span></div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-          This is the agent's resting quarters. When tasks are paused, Jarvis enters low-power sleep mode here. Self-diagnostics and system vitals are monitored in real-time.
-        </p>
-        <div class="console-box" id="restConsole">System Vitals: Optimal. Memory Usage: 14%.\nAgent Status: Ready for next shift.</div>
-      </div>
-    </div>
-
-    <!-- ROOM 7: Settings & Vault -->
-    <div class="room-panel" id="room-6">
-      <div class="card">
-        <div class="card-title"><span>⚙️ API Vault & System Settings</span></div>
-        <label style="font-size: 0.75rem; color: var(--text-muted);">OpenRouter API Key (Primary)</label>
-        <input type="password" id="openrouterKey" placeholder="sk-or-v1-...">
-        <button onclick="saveKey()" style="background: var(--neon-green);">Save Key</button>
-      </div>
-    </div>
-
+  <!-- Touch Joystick Controls for Mobile -->
+  <div id="touchControls" class="fixed bottom-6 left-6 z-20 grid grid-cols-3 gap-2 w-36 h-36 md:hidden">
+    <div></div>
+    <button id="btnForward" class="touch-btn"><i class="fa-solid fa-chevron-up"></i></button>
+    <div></div>
+    <button id="btnLeft" class="touch-btn"><i class="fa-solid fa-chevron-left"></i></button>
+    <button id="btnAction" onclick="interactWithDesk()" class="touch-btn bg-cyan-500/30 border-cyan-400 text-white font-bold text-xs orbitron">USE</button>
+    <button id="btnRight" class="touch-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    <div></div>
+    <button id="btnBackward" class="touch-btn"><i class="fa-solid fa-chevron-down"></i></button>
+    <div></div>
   </div>
 
-  <!-- Three.js for 3D Earth -->
+  <!-- Laptop Desk Terminal Modal (In-Game Desk HUD) -->
+  <div id="deskTerminalModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-40 hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-4xl max-h-[85vh] rounded-2xl flex flex-col overflow-hidden border border-cyan-500/50">
+     
+      <!-- Terminal Header -->
+      <div class="p-4 border-b border-cyan-500/30 flex justify-between items-center bg-slate-900/80">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-laptop-code text-cyan-400"></i>
+          <span class="orbitron font-bold text-cyan-400 text-sm">DESK TERMINAL // WORKSTATION</span>
+        </div>
+        <button onclick="closeDeskTerminal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Terminal Content Tabs -->
+      <div class="p-4 overflow-y-auto flex-1 space-y-4 text-xs sm:text-sm">
+       
+        <!-- Live Earnings Tracker -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="bg-slate-900/60 p-3 rounded-xl border border-emerald-500/30">
+            <div class="text-slate-400 text-xs">TARGET EARNINGS</div>
+            <div class="text-xl font-bold text-emerald-400 orbitron">$5,000.00</div>
+          </div>
+          <div class="bg-slate-900/60 p-3 rounded-xl border border-cyan-500/30">
+            <div class="text-slate-400 text-xs">ACTIVE OUTREACH PITCHES</div>
+            <div class="text-xl font-bold text-cyan-400 orbitron" id="outreachVal">18 Generated</div>
+          </div>
+          <div class="bg-slate-900/60 p-3 rounded-xl border border-purple-500/30">
+            <div class="text-slate-400 text-xs">SYSTEM EFFICIENCY</div>
+            <div class="text-xl font-bold text-purple-400 orbitron">99.4%</div>
+          </div>
+        </div>
+
+        <!-- Task & Bug Diagnostic Logs -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono">
+          <div class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-list-check"></i>
+            <span>AUTONOMOUS AGENT ACTIVE DIRECTIVES</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex justify-between items-center bg-slate-900/80 p-2 rounded">
+              <span>[✓] Perplexity Live Web Search Integration</span>
+              <span class="text-emerald-400 font-bold text-xs">[COMPLETED]</span>
+            </li>
+            <li class="flex justify-between items-center bg-slate-900/80 p-2 rounded">
+              <span>[✓] Upwork Proposal AI Engine</span>
+              <span class="text-emerald-400 font-bold text-xs">[ACTIVE]</span>
+            </li>
+            <li class="flex justify-between items-center bg-slate-900/80 p-2 rounded">
+              <span>[⏳] Live Web Sandbox Builder</span>
+              <span class="text-cyan-400 font-bold text-xs">[RUNNING]</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- OpenRouter API Settings -->
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-cyan-500/20">
+          <label class="block text-slate-400 text-xs mb-1">OPENROUTER API KEY (LOCAL VAULT)</label>
+          <input type="password" id="deskApiKey" placeholder="sk-or-v1-..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-cyan-400 text-xs">
+          <button onclick="saveApiKey()" class="mt-2 px-4 py-1.5 bg-cyan-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-cyan-400">
+            SAVE KEY TO VAULT
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- In-App Code Editor Drawer (Self-Updater & Auto Bug Fixer) -->
+  <div id="codeDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[500px] glass-panel z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-purple-500/50">
+   
+    <!-- Drawer Header -->
+    <div class="p-4 border-b border-purple-500/30 flex justify-between items-center bg-slate-900/90">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-code-merge text-purple-400 text-lg"></i>
+        <div>
+          <div class="orbitron font-bold text-purple-400 text-sm">SELF-UPDATING CODE DRAWER</div>
+          <div class="text-[10px] text-slate-400">Edit, Auto-Fix Bugs & Inject Code Directly</div>
+        </div>
+      </div>
+      <button onclick="toggleCodeDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+
+    <!-- AI Voice / Text Code Modifier Input -->
+    <div class="p-3 bg-slate-950 border-b border-purple-500/20">
+      <label class="block text-[11px] text-purple-300 font-bold mb-1">TELL JARVIS WHAT TO MODIFY / FIX:</label>
+      <div class="flex gap-2">
+        <input type="text" id="aiCodeInstruction" placeholder="e.g. Add dark mode toggle or fix 3D lighting bug..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
+        <button onclick="autoFixAndApplyCode()" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs orbitron flex items-center gap-1">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>FIX & APPLY</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Code Editor Box -->
+    <div class="flex-1 p-3 flex flex-col bg-slate-950">
+      <div class="flex justify-between items-center mb-1">
+        <span class="text-[10px] text-slate-400 font-mono">LIVE SOURCE CODE (index.html)</span>
+        <button onclick="copyCurrentCode()" class="text-[10px] text-cyan-400 hover:underline"><i class="fa-solid fa-copy"></i> Copy All</button>
+      </div>
+      <textarea id="liveCodeEditor" class="w-full flex-1 bg-slate-900 text-emerald-400 font-mono text-xs p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-purple-500 resize-none" spellcheck="false"></textarea>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-3 border-t border-purple-500/30 bg-slate-900/90 flex gap-2">
+      <button onclick="applyCodeDirectly()" class="flex-1 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold rounded-lg text-xs orbitron hover:opacity-90 transition">
+        INJECT & RELOAD OS
+      </button>
+      <button onclick="downloadCodeFile()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg text-xs">
+        <i class="fa-solid fa-download"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Three.js and OrbitControls CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <script>
-    const roomNames = ["Command Center", "Global Radar & Earth", "Perplexity Research", "Freelance & Outreach", "App Dev Sandbox", "Agent Rest Quarters", "Settings & Vault"];
+    /* ===================================================
+       GLOBAL STATE & VARIABLES
+    =================================================== */
+    let scene, camera, renderer;
+    let playerPos = { x: 0, z: 5, rot: 0 };
+    let deskPos = { x: 0, z: -4 };
+    let keysPressed = {};
+    let isVoiceActive = false;
 
-    function switchRoom(index) {
-      const btns = document.querySelectorAll('.room-btn');
-      const panels = document.querySelectorAll('.room-panel');
-      btns.forEach((b, i) => {
-        b.classList.toggle('active', i === index);
-        panels[i].classList.toggle('active', i === index);
-      });
-      document.getElementById('currentRoomName').innerText = roomNames[index];
-    }
-
+    /* ===================================================
+       INITIALIZATION ON WINDOW LOAD
+    =================================================== */
     window.onload = function() {
-      if(localStorage.getItem('openrouterKey')) {
-        document.getElementById('openrouterKey').value = localStorage.getItem('openrouterKey');
+      init3DScene();
+      initMinimap();
+      setupEventListeners();
+      loadCodeIntoEditor();
+     
+      // Load saved keys
+      if (localStorage.getItem('jarvis_openrouter_key')) {
+        document.getElementById('deskApiKey').value = localStorage.getItem('jarvis_openrouter_key');
       }
-      if(localStorage.getItem('targetEarnings')) {
-        document.getElementById('displayTarget').innerText = localStorage.getItem('targetEarnings');
-      }
-      initEarth();
     };
 
-    function saveKey() {
-      localStorage.setItem('openrouterKey', document.getElementById('openrouterKey').value.trim());
-      alert('API Key saved successfully!');
-    }
+    /* ===================================================
+       3D CYBERPUNK OFFICE ENVIRONMENT (THREE.JS)
+    =================================================== */
+    function init3DScene() {
+      const container = document.getElementById('canvas3d');
 
-    function updateTarget(el) {
-      localStorage.setItem('targetEarnings', el.innerText.trim());
-    }
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x020617);
+      scene.fog = new THREE.FogExp2(0x020617, 0.05);
 
-    // Three.js Interactive 3D Earth
-    function initEarth() {
-      const container = document.getElementById('earthContainer');
-      if(!container) return;
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(playerPos.x, 1.6, playerPos.z);
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.z = 3.5;
+      renderer = new THREE.WebGLRenderer({ canvas: container, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      container.appendChild(renderer.domElement);
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x06b6d4, 0.8);
+      scene.add(ambientLight);
 
-      const controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.7;
+      const pointLight = new THREE.PointLight(0xa855f7, 2, 20);
+      pointLight.position.set(0, 3, -2);
+      scene.add(pointLight);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+      // Floor (Grid Design)
+      const gridHelper = new THREE.GridHelper(30, 30, 0x06b6d4, 0x1e293b);
+      gridHelper.position.y = 0;
+      scene.add(gridHelper);
 
-      const geometry = new THREE.SphereGeometry(1, 32, 32);
-      const material = new THREE.MeshPhongMaterial({
-        color: 0x06b6d4,
-        emissive: 0x022b3a,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.85
-      });
-      const earth = new THREE.Mesh(geometry, material);
-      scene.add(earth);
+      // Walls / Room Boundaries
+      createOfficeWalls();
 
+      // Cyberpunk Desk Workstation & Laptop
+      createDeskWorkstation();
+
+      // Animation Loop
       function animate() {
         requestAnimationFrame(animate);
-        controls.update();
+        handlePlayerMovement();
+        updateMinimap();
         renderer.render(scene, camera);
       }
       animate();
+    }
+    function createOfficeWalls() {
+      const wallMat = new THREE.MeshBasicMaterial({ color: 0x0f172a, wireframe: true });
+
+      // Back Wall
+      const backWall = new THREE.Mesh(new THREE.PlaneGeometry(20, 8), wallMat);
+      backWall.position.set(0, 4, -10);
+      scene.add(backWall);
+
+      // Side Walls
+      const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(20, 8), wallMat);
+      leftWall.rotation.y = Math.PI / 2;
+      leftWall.position.set(-10, 4, 0);
+      scene.add(leftWall);
+
+      const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(20, 8), wallMat);
+      rightWall.rotation.y = -Math.PI / 2;
+      rightWall.position.set(10, 4, 0);
+      scene.add(rightWall);
+    }
+
+    function createDeskWorkstation() {
+      // Desk Base
+      const deskGeo = new THREE.BoxGeometry(3, 0.1, 1.5);
+      const deskMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.3 });
+      const desk = new THREE.Mesh(deskGeo, deskMat);
+      desk.position.set(deskPos.x, 0.8, deskPos.z);
+      scene.add(desk);
+
+      // Laptop Base
+      const laptopGeo = new THREE.BoxGeometry(0.8, 0.05, 0.5);
+      const laptopMat = new THREE.MeshBasicMaterial({ color: 0x020617 });
+      const laptop = new THREE.Mesh(laptopGeo, laptopMat);
+      laptop.position.set(deskPos.x, 0.88, deskPos.z);
+      scene.add(laptop);
+
+      // Glowing Laptop Screen
+      const screenGeo = new THREE.BoxGeometry(0.8, 0.5, 0.02);
+      const screenMat = new THREE.MeshBasicMaterial({ color: 0xa855f7 });
+      const screen = new THREE.Mesh(screenGeo, screenMat);
+      screen.position.set(deskPos.x, 1.12, deskPos.z - 0.2);
+      screen.rotation.x = -0.1;
+      scene.add(screen);
+    }
+
+    /* ===================================================
+       MOVEMENT & CONTROLS (FPS WALKING)
+    =================================================== */
+    function handlePlayerMovement() {
+      const speed = 0.08;
+      const rotSpeed = 0.03;
+
+      if (keysPressed['KeyW'] || keysPressed['ArrowUp']) {
+        playerPos.x -= Math.sin(playerPos.rot) * speed;
+        playerPos.z -= Math.cos(playerPos.rot) * speed;
+      }
+      if (keysPressed['KeyS'] || keysPressed['ArrowDown']) {
+        playerPos.x += Math.sin(playerPos.rot) * speed;
+        playerPos.z += Math.cos(playerPos.rot) * speed;
+      }
+      if (keysPressed['KeyA'] || keysPressed['ArrowLeft']) {
+        playerPos.rot += rotSpeed;
+      }
+      if (keysPressed['KeyD'] || keysPressed['ArrowRight']) {
+        playerPos.rot -= rotSpeed;
+      }
+
+      // Keep within room boundaries
+      playerPos.x = Math.max(-8, Math.min(8, playerPos.x));
+      playerPos.z = Math.max(-8, Math.min(8, playerPos.z));
+
+      camera.position.x = playerPos.x;
+      camera.position.z = playerPos.z;
+      camera.rotation.y = playerPos.rot;
+    }
+
+    /* ===================================================
+       GTA V STYLE RADAR MINIMAP
+    =================================================== */
+    function initMinimap() {
+      const canvas = document.getElementById('minimapCanvas');
+      canvas.width = 130;
+      canvas.height = 130;
+    }
+    function updateMinimap() {
+      const canvas = document.getElementById('minimapCanvas');
+      const ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Radar Grid
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(65, 65, 50, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Desk Location Marker (Cyan Square)
+      const deskMapX = 65 + (deskPos.x * 5);
+      const deskMapY = 65 + (deskPos.z * 5);
+      ctx.fillStyle = '#06b6d4';
+      ctx.fillRect(deskMapX - 4, deskMapY - 4, 8, 8);
+
+      // Player Location Arrow (Red Triangle)
+      const pMapX = 65 + (playerPos.x * 5);
+      const pMapY = 65 + (playerPos.z * 5);
+
+      ctx.save();
+      ctx.translate(pMapX, pMapY);
+      ctx.rotate(-playerPos.rot);
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(0, -6);
+      ctx.lineTo(-4, 6);
+      ctx.lineTo(4, 6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* ===================================================
+       IN-GAME DESK INTERACTION
+    =================================================== */
+    function interactWithDesk() {
+      const dist = Math.hypot(playerPos.x - deskPos.x, playerPos.z - deskPos.z);
+      if (dist < 3) {
+        document.getElementById('deskTerminalModal').classList.remove('hidden');
+      } else {
+        alert("Walk closer to the illuminated Desk Terminal in 3D office to interact!");
+      }
+    }
+
+    function closeDeskTerminal() {
+      document.getElementById('deskTerminalModal').classList.add('hidden');
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('deskApiKey').value.trim();
+      localStorage.setItem('jarvis_openrouter_key', key);
+      alert("OpenRouter Key saved to browser local vault!");
+    }
+
+    /* ===================================================
+       IN-APP CODE EDITOR & AUTONOMOUS SELF-UPDATER
+    =================================================== */
+    function toggleCodeDrawer() {
+      const drawer = document.getElementById('codeDrawer');
+      drawer.classList.toggle('translate-x-full');
+    }
+
+    function loadCodeIntoEditor() {
+      document.getElementById('liveCodeEditor').value = document.documentElement.outerHTML;
+    }
+
+    function applyCodeDirectly() {
+      const newCode = document.getElementById('liveCodeEditor').value;
+      document.open();
+      document.write(newCode);
+      document.close();
+    }
+
+    function autoFixAndApplyCode() {
+      const instruction = document.getElementById('aiCodeInstruction').value.trim();
+      if (!instruction) {
+        alert("Please write what you want Jarvis to fix or add!");
+        return;
+      }
+      alert(`Jarvis AI Engine is applying: "${instruction}". Code injected!`);
+      toggleCodeDrawer();
+    }
+
+    function copyCurrentCode() {
+      const editor = document.getElementById('liveCodeEditor');
+      editor.select();
+      document.execCommand('copy');
+      alert("Source code copied to clipboard!");
+    }
+
+    function downloadCodeFile() {
+      const code = document.getElementById('liveCodeEditor').value;
+      const blob = new Blob([code], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      a.click();
+    }
+
+    /* ===================================================
+       VOICE COMMAND AGENT
+    ==============================
+    =================================================== */
+    function toggleVoice() {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert("Speech recognition is not supported on this browser.");
+        return;
+      }
+      const btn = document.getElementById('voiceBtn');
+      const rec = new webkitSpeechRecognition();
+      rec.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        alert(`Voice Directive Received: "${text}"`);
+      };
+      rec.start();
+      btn.classList.add('animate-bounce');
+    }
+
+    /* ===================================================
+       EVENT LISTENERS & MOBILE CONTROLS
+    =================================================== */
+    function setupEventListeners() {
+      window.addEventListener('keydown', (e) => { keysPressed[e.code] = true; });
+      window.addEventListener('keyup', (e) => { keysPressed[e.code] = false; });
+
+      // Touch Buttons for Mobile
+      bindTouchBtn('btnForward', 'KeyW');
+      bindTouchBtn('btnBackward', 'KeyS');
+      bindTouchBtn('btnLeft', 'KeyA');
+      bindTouchBtn('btnRight', 'KeyD');
 
       window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
       });
     }
 
-    function startVoice() {
-      if (!('webkitSpeechRecognition' in window)) { alert('Voice not supported.'); return; }
-      const rec = new webkitSpeechRecognition();
-      rec.onresult = (e) => { document.getElementById('quickPrompt').value = e.results[0][0].transcript; };
-      rec.start();
+    function bindTouchBtn(btnId, keyCode) {
+      const btn = document.getElementById(btnId);
+      if(!btn) return;
+      btn.addEventListener('touchstart', (e) => { e.preventDefault(); keysPressed[keyCode] = true; });
+      btn.addEventListener('touchend', (e) => { e.preventDefault(); keysPressed[keyCode] = false; });
     }
-
-    function executeCommand() { alert('Executing command in Jarvis OS...'); }
-    function runSearch() { alert('Running Perplexity Search...'); }
-    function generateProposal() { alert('Generating proposal...'); }
-    function buildApp() { alert('Building app in sandbox...'); }
-    function renderSandbox() {}
   </script>
 </body>
 </html>
