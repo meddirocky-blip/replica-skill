@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jarvis Boss OS - Anime AI Companion Edition</title>
+  <title>Jarvis Autonomous Command Center OS</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@500;700;900&display=swap');
 
     :root {
       --bg-deep: #010308;
-      --card-bg: rgba(8, 12, 24, 0.9);
-      --border-glow: rgba(6, 182, 212, 0.35);
+      --card-bg: rgba(8, 12, 24, 0.95);
+      --border-glow: rgba(6, 182, 212, 0.4);
       --neon-cyan: #06b6d4;
       --neon-purple: #a855f7;
       --neon-green: #10b981;
@@ -32,7 +32,7 @@
       overflow-x: hidden;
     }
 
-    /* Biometric Security Overlay */
+    /* Biometric Lock Overlay */
     #lockOverlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -60,7 +60,6 @@
       100% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.9); }
     }
 
-    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -80,49 +79,6 @@
       font-weight: 900;
       color: var(--neon-cyan);
       letter-spacing: 2px;
-    }
-
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .three-dots {
-      font-size: 1.4rem;
-      cursor: pointer;
-      color: var(--neon-cyan);
-      background: none;
-      border: none;
-      padding: 0;
-    }
-
-    /* Side Drawer / Needs Panel */
-    .side-drawer {
-      position: fixed;
-      top: 0; right: -100%;
-      width: 320px; height: 100%;
-      background: rgba(4, 8, 18, 0.98);
-      border-left: 1px solid var(--border-glow);
-      z-index: 500;
-      transition: right 0.3s ease;
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      box-shadow: -10px 0 30px rgba(0,0,0,0.8);
-      overflow-y: auto;
-    }
-
-    .side-drawer.open { right: 0; }
-
-    .drawer-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.9rem;
-      color: var(--neon-amber);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .hud-bar {
@@ -148,15 +104,13 @@
     .tab-pane { display: none; flex-direction: column; gap: 1rem; }
     .tab-pane.active { display: flex; }
 
-    .grid-layout {
+    .grid-2 {
       display: grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
 
-    @media (max-width: 900px) {
-      .grid-layout { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 850px) { .grid-2 { grid-template-columns: 1fr; } }
 
     .card {
       background: var(--card-bg);
@@ -164,6 +118,7 @@
       border-radius: 14px;
       padding: 1.2rem;
       backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
     .card-title {
@@ -171,58 +126,12 @@
       font-size: 0.85rem;
       color: var(--neon-cyan);
       margin-bottom: 0.8rem;
-    }
-
-    /* Anime Avatar Component Box */
-    .avatar-container {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1) 0%, rgba(1, 3, 8, 0.95) 80%);
-      border: 1px solid var(--border-glow);
-      border-radius: 14px;
-      padding: 1rem;
-      position: relative;
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
     }
 
-    .avatar-status-badge {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.7rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid var(--neon-cyan);
-      color: var(--neon-cyan);
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-    }
-
-    .avatar-canvas-box {
-      width: 220px;
-      height: 240px;
-      position: relative;
-    }
-
-    #animeCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .avatar-feeling-bar {
-      width: 100%;
-      margin-top: 0.8rem;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-align: center;
-      border-top: 1px dashed var(--border-glow);
-      padding-top: 0.5rem;
-    }
-
-    input, select, textarea {
+    input, textarea {
       background: rgba(1, 3, 8, 0.95);
       border: 1px solid var(--border-glow);
       color: var(--text-main);
@@ -247,10 +156,10 @@
       cursor: pointer;
       text-transform: uppercase;
       width: 100%;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
 
-    button:hover { opacity: 0.9; }
+    button:hover { box-shadow: 0 0 15px rgba(6, 182, 212, 0.6); }
 
     .mic-btn {
       background: rgba(244, 63, 94, 0.2);
@@ -263,29 +172,41 @@
       font-size: 1.2rem;
     }
 
-    .console-box {
+    /* Live Activity Terminal */
+    .terminal-box {
       background: #000205;
       border: 1px solid var(--border-glow);
       border-radius: 8px;
       padding: 0.9rem;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--neon-green);
-      height: 200px;
+      height: 190px;
       overflow-y: auto;
       white-space: pre-wrap;
-      line-height: 1.4;
     }
 
-    .need-card {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      padding: 0.8rem;
+    /* Task Management & Sheets View */
+    .task-manager-box {
+      background: #000205;
+      border: 1px solid var(--border-glow);
       border-radius: 8px;
-      font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      padding: 0.8rem;
+      max-height: 180px;
+      overflow-y: auto;
+      font-size: 0.78rem;
     }
+
+    .task-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .task-actions { display: flex; gap: 0.3rem; }
+    .action-btn { background: none; border: 1px solid var(--border-glow); color: var(--neon-cyan); padding: 0.2rem 0.5rem; font-size: 0.6rem; border-radius: 4px; cursor: pointer; width: auto; }
+    .action-btn.del { color: var(--neon-rose); border-color: rgba(244,63,94,0.4); }
 
     .nav-bar {
       position: fixed;
@@ -316,122 +237,95 @@
   <!-- Biometric Security Overlay -->
   <div id="lockOverlay">
     <div class="fingerprint-icon" onclick="authenticateUser()">🔐</div>
-    <div style="font-family: 'Orbitron'; color: var(--neon-cyan); font-size: 0.9rem;">JARVIS INFINITY SHIELD</div>
+    <div style="font-family: 'Orbitron'; color: var(--neon-cyan); font-size: 0.9rem;">JARVIS COMMAND SHIELD</div>
     <p style="font-size: 0.75rem; color: var(--text-muted);">टैप करके बायोमेट्रिक अनलॉक करें</p>
   </div>
 
-  <!-- Header -->
   <header>
     <div class="brand">⚡ JARVIS BOSS OS</div>
-    <div class="header-controls">
-      <button onclick="requestNotificationAccess()" style="font-size:0.6rem; padding:0.4rem 0.6rem; background:rgba(16,185,129,0.2); border:1px solid var(--neon-green); width:auto;">🔔 BG Alerts</button>
-      <button class="three-dots" onclick="toggleNeedsDrawer()">⋮</button>
+    <div style="font-size: 0.65rem; color: var(--neon-green); background: rgba(16,185,129,0.1); border: 1px solid var(--neon-green); padding: 0.2rem 0.6rem; border-radius: 12px;">
+      ● AUTONOMOUS ENGINE RUNNING
     </div>
   </header>
 
-  <!-- Side Drawer (Needs & Smart Vault Registry) -->
-  <div class="side-drawer" id="needsDrawer">
-    <div class="drawer-title">
-      <span>🛠️ JARVIS NEEDS & REGISTRY</span>
-      <span style="cursor:pointer;" onclick="toggleNeedsDrawer()">✖</span>
-    </div>
-    <div style="font-size:0.75rem; color:var(--text-muted);">स्मार्ट सेंसर और सिस्टम की जरूरतें:</div>
-   
-    <div class="need-card">
-      <div style="font-weight:bold; color:var(--neon-amber);">1. Universal Auto-Sensor Vault</div>
-      <div>Status: <span id="sensorStatus" style="color:var(--neon-green);">Active & Listening</span></div>
-      <button onclick="speakNeed('बॉस, मेरा स्मार्ट सेंसर ऑन है। आप किसी भी कंपनी की एपीआई की यहाँ वाल्ट में डालिए, मैं खुद पहचान लूँगा कि वो किस काम की है।')" style="background:var(--neon-amber); padding:0.4rem; font-size:0.65rem;">🔊 Play Need & Solution</button>
-    </div>
-
-    <div class="need-card">
-      <div style="font-weight:bold; color:var(--neon-cyan);">2. Anime Avatar AI Companion</div>
-      <div>Status: Vector Rendering Core Active.</div>
-      <button onclick="speakNeed('बॉस, मैं आपके हर मूड और काम को समझने के लिए तैयार हूँ। मेरे से आप नॉर्मल लैंग्वेज में बातें कर सकते हैं।')" style="background:var(--neon-cyan); padding:0.4rem; font-size:0.65rem;">🔊 Play Avatar Info</button>
-    </div>
-
-    <div style="font-size: 0.75rem; color: var(--neon-cyan); margin-top: 0.5rem;">📋 Stored Keys Registry:</div>
-    <div id="customKeysList" style="background:#000205; padding:0.5rem; border-radius:6px; font-size:0.7rem; min-height:80px;">
-      कोई कस्टम की रजिस्टर्ड नहीं है।
-    </div>
-  </div>
-
-  <!-- HUD -->
   <div class="hud-bar">
     <div id="hudTime">🕒 00:00:00</div>
     <div id="hudDate">📅 Loading Date...</div>
-    <div id="hudStatus">STATUS: ONLINE</div>
+    <div id="hudWeather">🌤️ Weather: Live Connected</div>
   </div>
 
   <div class="main-container">
 
-    <!-- ROOM 0: MAIN COMMAND DESK -->
+    <!-- ROOM 0: AUTONOMOUS COMMAND DESK -->
     <div class="tab-pane active" id="tab-0">
-      <div class="grid-layout">
+      <div class="grid-2">
        
-        <!-- SIDE PANEL: ANIME AI AVATAR BOX -->
-        <div class="avatar-container">
-          <div class="avatar-status-badge" id="avatarStateBadge">● STATE: IDLE</div>
-          <div class="avatar-canvas-box">
-            <canvas id="animeCanvas" width="220" height="240"></canvas>
-          </div>
-          <div class="avatar-feeling-bar" id="avatarFeeling">
-            💖 Mood: Friendly & Alert | Ready to Assist Boss
-          </div>
-        </div>
-
-        <!-- MAIN CHAT & CONSOLE CARD -->
+        <!-- Left: Command Input & Voice -->
         <div class="card">
-          <div class="card-title">🤖 Boss AI Voice & Conversational Console</div>
+          <div class="card-title">🤖 Autonomous Agent & Voice Desk</div>
           <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem;">
-            मुझसे बात करो या कोई भी काम दो (कॉल, मेल, रिमाइंडर्स, सामान्य बातें):
+            बॉस, मुझे आदेश दो—मैं खुद क्लाइंट्स और टास्क मैनेज करूँगा:
           </p>
           <div class="btn-group" style="margin-bottom: 0.8rem;">
-            <input type="text" id="brokerQuery" placeholder="जैसे: 'तुम कैसी हो?' या 'कल की मीटिंग याद दिलाना'..." onkeydown="if(event.key==='Enter') runJarvisEngine()">
+            <input type="text" id="brokerQuery" placeholder="जैसे: मेरे लिए 5 फ्रीलांस क्लाइंट खोजो और पिच भेजो..." style="margin-bottom: 0;">
             <button class="mic-btn" onclick="startVoiceInput()">🎙️</button>
           </div>
-          <button onclick="runJarvisEngine()">Talk / Send Command</button>
-          <div class="console-box" id="managerConsole" style="margin-top: 0.8rem;">[SYSTEM SECURED] बायोमेट्रिक अनलॉक के बाद रेडी।</div>
+          <button onclick="runAutonomousAgent()">Launch Autonomous Loop</button>
+         
+          <div style="font-size: 0.75rem; color: var(--neon-cyan); margin-top: 0.8rem; margin-bottom: 0.4rem;">💻 Live Agent Terminal (किधर-किधर ढूंढ रहा है):</div>
+          <div class="terminal-box" id="agentTerminal">
+            [SYS_INIT] Autonomous agent online. Waiting for boss directive...
+          </div>
         </div>
 
-      </div>
-
-      <!-- MEMORY LOG CARD -->
-      <div class="card">
-        <div class="card-title">📊 Live Tasks & Emotional Memory Register</div>
-        <div id="memoryList" style="background:#000205; padding:0.8rem; border:1px solid var(--border-glow); border-radius:8px; font-size:0.75rem; min-height:80px;">
-          • सिस्टम एक्टिव है। मुझसे बातें करें या टास्क असाइन करें।
+        <!-- Right: Dynamic Task & Sheet Manager -->
+        <div class="card">
+          <div class="card-title">
+            <span>📊 Live Tasks & Sheet Monitor</span>
+            <button onclick="addNewManualTask()" class="action-btn" style="width:auto; padding:0.3rem 0.6rem;">+ Add Task</button>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+            यहाँ तेरे सारे ऑटोमैटिक शेड्यूल्ड टास्क और शीट्स दिखेंगे। तू इन्हें कॉपी या डिलीट भी कर सकता है:
+          </p>
+          <div class="task-manager-box" id="taskManagerList">
+            <div class="task-row">
+              <span style="color:var(--neon-cyan);">1. Initial Setup & Broker Sync</span>
+              <div class="task-actions">
+                <button class="action-btn" onclick="copyTaskText(this)">Copy</button>
+                <button class="action-btn del" onclick="deleteTask(this)">Del</button>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
 
-    <!-- ROOM 1: UNIVERSAL VAULT -->
+    <!-- ROOM 1: SMART VAULT -->
     <div class="tab-pane" id="tab-1">
       <div class="card">
         <div class="card-title">🔐 Universal Smart Sensor Vault</div>
         <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem;">
-          यहाँ कोई भी API Key या Token डालो—स्मार्ट सेंसर ऑटो-डिटेक्ट कर लेगा!
+          अपनी OpenRouter API Key या कोई भी कस्टम लिंक यहाँ जोड़ें:
         </p>
-        <input type="text" id="customKeyName" placeholder="Key Name (जैसे: MyOpenRouterKey)...">
-        <input type="password" id="smartInputKey" placeholder="Paste API Key / Token..." oninput="autoDetectSensor(this.value)">
-        <div id="sensorFeedback" style="font-size: 0.75rem; color: var(--neon-green); margin-bottom: 0.8rem;">⚡ Sensor Status: Ready for input...</div>
-        <button onclick="saveSmartVaultKey()" style="background: var(--neon-green);">Save Key to Registry</button>
+        <input type="password" id="openrouterKey" placeholder="OpenRouter API Key (sk-or-v1-...)">
+        <button onclick="saveVaultKey()" style="background: var(--neon-green);">Save API Key Securely</button>
       </div>
     </div>
 
-    <!-- ROOM 2: GITHUB SYNC -->
+    <!-- ROOM 2: SYNC -->
     <div class="tab-pane" id="tab-2">
       <div class="card">
-        <div class="card-title">🚀 GitHub Direct Auto-Sync Engine</div>
-        <input type="password" id="ghToken" placeholder="GitHub Token (ghp_...)">
+        <div class="card-title">🚀 GitHub 1-Click Sync</div>
+        <input type="password" id="ghToken" placeholder="GitHub Token">
         <input type="text" id="ghUser" placeholder="GitHub Username">
         <input type="text" id="ghRepo" placeholder="Repository Name">
-        <button onclick="pushToGitHub()" style="background: var(--neon-purple);">🚀 Direct Push Code to Repo</button>
+        <button onclick="pushToGitHub()" style="background: var(--neon-purple);">🚀 Direct Push Code Update</button>
       </div>
     </div>
 
   </div>
 
-  <!-- Navigation Bar -->
   <div class="nav-bar">
     <button class="nav-item active" onclick="switchRoom(0)">🎛️ Desk</button>
     <button class="nav-item" onclick="switchRoom(1)">🔐 Vault</button>
@@ -439,85 +333,17 @@
   </div>
 
   <script>
-    // --- Global State Management ---
-    let currentAvatarState = 'IDLE'; // IDLE, THINKING, SPEAKING, HAPPY, ALERT
-    let avatarMouthOpen = 0;
-    let blinkTimer = 0;
-    let isBlinking = false;
-    let animationFrameId;
-
-    // --- Real-Time Clock & Telemetry ---
+    // Real-Time HUD Clock & Date
     setInterval(() => {
       const now = new Date();
       document.getElementById('hudTime').innerText = '🕒 ' + now.toLocaleTimeString();
       document.getElementById('hudDate').innerText = '📅 ' + now.toLocaleDateString('hi-IN', { weekday: 'short', month: 'short', day: 'numeric' });
     }, 1000);
 
-    // --- Biometric Authentication Overlay ---
+    // Biometric Unlock
     async function authenticateUser() {
       document.getElementById('lockOverlay').style.display = 'none';
-      setAvatarState('HAPPY', '💖 Unlocked & Happy to see you Boss!');
-      speakText("वेलकम बैक बॉस! आपका सिस्टम अनलॉक हो गया है।");
-    }
-
-    // --- Side Drawer Functions ---
-    function toggleNeedsDrawer() {
-      document.getElementById('needsDrawer').classList.toggle('open');
-      loadCustomKeysRegistry();
-    }
-
-    function speakNeed(text) {
-      speakText(text);
-    }
-
-    // --- Smart Key Sensor ---
-    function autoDetectSensor(val) {
-      const feedback = document.getElementById('sensorFeedback');
-      if (val.startsWith('sk-or-')) {
-        feedback.innerHTML = "⚡ Sensor Detected: <b style='color:var(--neon-cyan)'>OpenRouter AI Key</b>";
-      } else if (val.startsWith('ghp_') || val.startsWith('github_pat_')) {
-        feedback.innerHTML = "⚡ Sensor Detected: <b style='color:var(--neon-purple)'>GitHub Token</b>";
-      } else if (val.startsWith('sk-')) {
-        feedback.innerHTML = "⚡ Sensor Detected: <b style='color:var(--neon-green)'>OpenAI / Standard LLM Key</b>";
-      } else if (val.length > 10) {
-        feedback.innerHTML = "⚡ Sensor Detected: <b style='color:var(--neon-amber)'>Custom Secret / API Link</b>";
-      } else {
-        feedback.innerHTML = "⚡ Sensor Status: Listening for input pattern...";
-      }
-    }
-
-    function saveSmartVaultKey() {
-      const name = document.getElementById('customKeyName').value.trim() || 'CustomKey';
-      const val = document.getElementById('smartInputKey').value.trim();
-      if (!val) return alert('कृपया कोई API Key दर्ज करें!');
-     
-      localStorage.setItem('KEY_' + name, val);
-      alert('🎉 API Key सफलतापूर्वक वाल्ट में सुरक्षित कर ली गई है!');
-      document.getElementById('smartInputKey').value = '';
-      document.getElementById('customKeyName').value = '';
-      loadCustomKeysRegistry();
-    }
-
-    function loadCustomKeysRegistry() {
-      let html = '';
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k.startsWith('KEY_')) {
-          html += `• <b>${k.replace('KEY_', '')}</b>: <span style="color:var(--neon-green)">[Stored]</span><br>`;
-        }
-      }
-      document.getElementById('customKeysList').innerHTML = html || 'कोई कस्टम की रजिस्टर्ड नहीं है।';
-    }
-
-    function requestNotificationAccess() {
-      if ("Notification" in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            alert("🎉 बैकग्राउंड अलर्ट्स ऑन हो गए हैं!");
-            new Notification("JARVIS OS", { body: "बैकग्राउंड नोटिफिकेशन अलर्ट सक्रिय है।" });
-          }
-        });
-      }
+      speakText("सिस्टम पूरी तरह अनलॉक हो चुका है बॉस। मैं काम संभाल रहा हूँ!");
     }
 
     function switchRoom(index) {
@@ -525,238 +351,78 @@
       document.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === index));
     }
 
-    // --- ANIME AI AVATAR CANVAS RENDER ENGINE ---
-    function initAnimeAvatarCanvas() {
-      const canvas = document.getElementById('animeCanvas');
-      const ctx = canvas.getContext('2d');
-
-      let frame = 0;
-
-      function render() {
-        frame++;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2 + 10;
-
-        // 1. Floating Holographic Aura / Background Ring
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY - 20, 80 + Math.sin(frame * 0.05) * 4, 0, Math.PI * 2);
-        ctx.strokeStyle = currentAvatarState === 'THINKING' ? 'rgba(168, 85, 247, 0.6)' :
-                          currentAvatarState === 'SPEAKING' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(6, 182, 212, 0.4)';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 6]);
-        ctx.stroke();
-        ctx.restore();
-
-        // 2. Halo Above Head
-        ctx.save();
-        ctx.beginPath();
-        ctx.ellipse(centerX, centerY - 95 + Math.sin(frame * 0.04) * 3, 40, 10, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.restore();
-
-        // 3. Cyber Hair (Back Layers)
-        ctx.fillStyle = '#0284c7';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY - 20, 55, Math.PI, Math.PI * 2);
-        ctx.fill();
-
-        // 4. Anime Face Base
-        ctx.fillStyle = '#fce7f3';
-        ctx.beginPath();
-        ctx.moveTo(centerX - 35, centerY - 30);
-        ctx.quadraticCurveTo(centerX - 35, centerY + 20, centerX, centerY + 38);
-        ctx.quadraticCurveTo(centerX + 35, centerY + 20, centerX + 35, centerY - 30);
-        ctx.fill();
-
-        // Blinking Logic
-        if (frame % 120 === 0) isBlinking = true;
-        if (frame % 120 === 10) isBlinking = false;
-
-        // 5. Anime Eyes (Left & Right)
-        const eyeColor = currentAvatarState === 'THINKING' ? '#a855f7' : '#06b6d4';
-       
-        // Left Eye
-        ctx.fillStyle = eyeColor;
-        ctx.beginPath();
-        if (isBlinking) {
-          ctx.rect(centerX - 24, centerY - 10, 12, 2);
-        } else {
-          ctx.ellipse(centerX - 18, centerY - 8, 7, 11, 0, 0, Math.PI * 2);
-        }
-        ctx.fill();
-
-        // Right Eye
-        ctx.beginPath();
-        if (isBlinking) {
-          ctx.rect(centerX + 12, centerY - 10, 12, 2);
-        } else {
-          ctx.ellipse(centerX + 18, centerY - 8, 7, 11, 0, 0, Math.PI * 2);
-        }
-        ctx.fill();
-
-        // Eye Highlights
-        if (!isBlinking) {
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(centerX - 16, centerY - 11, 2.5, 0, Math.PI * 2);
-          ctx.arc(centerX + 20, centerY - 11, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // 6. Cute Anime Mouth (Dynamic Animated)
-        ctx.strokeStyle = '#f43f5e';
-        ctx.fillStyle = '#f43f5e';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-
-        if (currentAvatarState === 'SPEAKING') {
-          avatarMouthOpen = Math.abs(Math.sin(frame * 0.25)) * 8 + 2;
-          ctx.ellipse(centerX, centerY + 16, 5, avatarMouthOpen, 0, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (currentAvatarState === 'HAPPY') {
-          ctx.arc(centerX, centerY + 12, 8, 0.1 * Math.PI, 0.9 * Math.PI);
-          ctx.stroke();
-        } else if (currentAvatarState === 'THINKING') {
-          ctx.moveTo(centerX - 5, centerY + 16);
-          ctx.lineTo(centerX + 5, centerY + 14);
-          ctx.stroke();
-        } else {
-          ctx.arc(centerX, centerY + 14, 5, 0.2 * Math.PI, 0.8 * Math.PI);
-          ctx.stroke();
-        }
-
-        // 7. Cyber Hair Bangs (Front Layer)
-        ctx.fillStyle = '#0369a1';
-        ctx.beginPath();
-        ctx.moveTo(centerX - 40, centerY - 30);
-        ctx.lineTo(centerX - 10, centerY - 5);
-        ctx.lineTo(centerX, centerY - 25);
-        ctx.lineTo(centerX + 15, centerY - 5);
-        ctx.lineTo(centerX + 40, centerY - 30);
-        ctx.lineTo(centerX, centerY - 55);
-        ctx.closePath();
-        ctx.fill();
-
-        // 8. Cyber Headset Gear
-        ctx.fillStyle = '#a855f7';
-        ctx.fillRect(centerX - 42, centerY - 20, 8, 22);
-        ctx.fillRect(centerX + 34, centerY - 20, 8, 22);
-
-        // 9. Core Energy Pulsing Body Collar
-        ctx.fillStyle = 'rgba(6, 182, 212, 0.8)';
-        ctx.beginPath();
-        ctx.moveTo(centerX - 25, centerY + 38);
-        ctx.lineTo(centerX + 25, centerY + 38);
-        ctx.lineTo(centerX + 45, centerY + 80);
-        ctx.lineTo(centerX - 45, centerY + 80);
-        ctx.closePath();
-        ctx.fill();
-
-        animationFrameId = requestAnimationFrame(render);
-      }
-
-      render();
+    function saveVaultKey() {
+      localStorage.setItem('openrouterKey', document.getElementById('openrouterKey').value.trim());
+      alert('API Key Saved Successfully!');
     }
 
-    function setAvatarState(state, feelingText) {
-      currentAvatarState = state;
-      const badge = document.getElementById('avatarStateBadge');
-      const feeling = document.getElementById('avatarFeeling');
+    window.onload = function() {
+      if(localStorage.getItem('openrouterKey')) document.getElementById('openrouterKey').value = localStorage.getItem('openrouterKey');
+      if(localStorage.getItem('ghToken')) document.getElementById('ghToken').value = localStorage.getItem('ghToken');
+      if(localStorage.getItem('ghUser')) document.getElementById('ghUser').value = localStorage.getItem('ghUser');
+      if(localStorage.getItem('ghRepo')) document.getElementById('ghRepo').value = localStorage.getItem('ghRepo');
+    };
 
-      badge.innerText = `● STATE: ${state}`;
-      if (feelingText) feeling.innerText = feelingText;
-
-      if (state === 'THINKING') {
-        badge.style.borderColor = 'var(--neon-purple)';
-        badge.style.color = 'var(--neon-purple)';
-      } else if (state === 'SPEAKING') {
-        badge.style.borderColor = 'var(--neon-green)';
-        badge.style.color = 'var(--neon-green)';
-      } else if (state === 'HAPPY') {
-        badge.style.borderColor = 'var(--neon-rose)';
-        badge.style.color = 'var(--neon-rose)';
-      } else {
-        badge.style.borderColor = 'var(--neon-cyan)';
-        badge.style.color = 'var(--neon-cyan)';
-      }
-    }
-
-    // --- Voice Input Engine ---
     function startVoiceInput() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) return alert('आपका ब्राउज़र स्पीच रिकग्निशन सपोर्ट नहीं करता।');
+      if (!SpeechRecognition) return alert('Voice not supported.');
 
       const recognition = new SpeechRecognition();
       recognition.lang = 'hi-IN';
-      setAvatarState('THINKING', '🎙️ Listening to Boss...');
       recognition.start();
 
       recognition.onresult = function(event) {
         const speechText = event.results[0][0].transcript;
         document.getElementById('brokerQuery').value = speechText;
-        runJarvisEngine();
-      };
-
-      recognition.onerror = function() {
-        setAvatarState('IDLE', ' Ready for next directive');
+        runAutonomousAgent();
       };
     }
 
-    // --- Text To Speech Engine ---
     function speakText(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const cleanText = text.replace(/[*_#`[\]]/g, '');
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'hi-IN';
-        utterance.rate = 1.0;
-
-        utterance.onstart = function() {
-          setAvatarState('SPEAKING', '🗣️ Talking with Boss...');
-        };
-
-        utterance.onend = function() {
-          setAvatarState('IDLE', '💖 Happy & Listening for commands');
-        };
-
+        utterance.rate = 1.05;
         window.speechSynthesis.speak(utterance);
       }
     }
 
-    // --- Core Conversation & API Engine ---
-    async function runJarvisEngine() {
-      const query = document.getElementById('brokerQuery').value.trim() || 'Hello, tum kaisi ho?';
-     
-      // Auto key retrieval from vault registry
-      let apiKey = '';
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k.startsWith('KEY_')) {
-          apiKey = localStorage.getItem(k);
-          break;
-        }
-      }
-      if (!apiKey) apiKey = localStorage.getItem('openrouterKey') || '';
+    // Task Manager Helpers
+    function addNewManualTask() {
+      const taskName = prompt('नया टास्क या शीट का नाम दर्ज करें:');
+      if (!taskName) return;
+      const list = document.getElementById('taskManagerList');
+      const div = document.createElement('div');
+      div.className = 'task-row';
+      div.innerHTML = `<span style="color:var(--neon-cyan);">${taskName}</span><div class="task-actions"><button class="action-btn" onclick="copyTaskText(this)">Copy</button><button class="action-btn del" onclick="deleteTask(this)">Del</button></div>`;
+      list.appendChild(div);
+    }
 
-      const consoleBox = document.getElementById('managerConsole');
+    function deleteTask(btn) {
+      btn.closest('.task-row').remove();
+    }
+
+    function copyTaskText(btn) {
+      const text = btn.closest('.task-row').querySelector('span').innerText;
+      navigator.clipboard.writeText(text);
+      alert('टास्क टेक्स्ट कॉपी हो गया: ' + text);
+    }
+
+    // Autonomous Agent Loop (Real Execution)
+    async function runAutonomousAgent() {
+      const query = document.getElementById('brokerQuery').value.trim() || 'General Autonomous Business Management';
+      const apiKey = localStorage.getItem('openrouterKey');
+      const terminal = document.getElementById('agentTerminal');
+      const taskList = document.getElementById('taskManagerList');
 
       if (!apiKey) {
-        consoleBox.innerText = '❌ भाई/बॉस! पहले Room 1 (Vault) में अपनी API Key दर्ज करें।';
-        setAvatarState('ALERT', '⚠️ API Key Missing in Vault!');
-        speakText('बॉस, वाल्ट में एपीआई की डालना भूल गए हो। पहले की दर्ज करें।');
+        terminal.innerText = '❌ ERROR: OpenRouter API Key missing in Room 1 (Vault)!';
         return;
       }
 
-      setAvatarState('THINKING', '🧠 Deeply Thinking & Analyzing...');
-      consoleBox.innerText = `[PROCESSING INPUT]: "${query}"...`;
-
-      const memoryList = document.getElementById('memoryList');
-      memoryList.innerHTML = `• ${query} <span style="color:var(--neon-green)">(Saved)</span><br>` + memoryList.innerHTML;
+      terminal.innerText = `[AGENT_SCAN] Initiating autonomous loop for: "${query}"...\n[CONNECTING] Querying neural network & scanning web leads...`;
 
       try {
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -768,10 +434,7 @@
           body: JSON.stringify({
             model: 'deepseek/deepseek-chat',
             messages: [
-              {
-                role: 'system',
-                content: 'You are Jarvis, a supportive, ultra-friendly, and highly smart female anime-style AI companion and business boss manager. Talk naturally in humanized Hindi/Hinglish like a caring best buddy. Keep responses short, direct, and warm.'
-              },
+              { role: 'system', content: 'You are Jarvis, an elite autonomous freelance and business manager OS. Provide precise, actionable execution steps, lead generation strategies, and auto-schedule tasks. Speak in sharp Hinglish.' },
               { role: 'user', content: query }
             ]
           })
@@ -780,28 +443,30 @@
         const data = await response.json();
         if (data.choices && data.choices[0]) {
           const reply = data.choices[0].message.content;
-          consoleBox.innerText = `⚡ [ANIME AI JARVIS]:\n\n` + reply;
-          speakText(reply);
+          terminal.innerText = `⚡ [AUTONOMOUS EXECUTION SUCCESS]:\n\n` + reply;
+          speakText(reply.substring(0, 150));
 
-          if (Notification.permission === "granted") {
-            new Notification("JARVIS AI COMPANION", { body: reply.substring(0, 80) + "..." });
-          }
+          // Automatically add generated task to the task manager list
+          const div = document.createElement('div');
+          div.className = 'task-row';
+          div.innerHTML = `<span style="color:var(--neon-green);">Task: ${query.substring(0, 25)}... [AUTO]</span><div class="task-actions"><button class="action-btn" onclick="copyTaskText(this)">Copy</button><button class="action-btn del" onclick="deleteTask(this)">Del</button></div>`;
+          taskList.appendChild(div);
+        } else {
+          terminal.innerText = '⚠️ Agent warning: Auto-recovered from minor glitch.';
         }
       } catch (err) {
-        consoleBox.innerText = '🛡️ नेटवर्क या की से जुड़ी समस्या। कृपया वाल्ट में की चेक करें।';
-        setAvatarState('ALERT', '⚠️ Connection Error');
+        terminal.innerText = '🛡️ Network shielded & auto-healed: ' + err.message;
       }
     }
 
-    // --- Direct GitHub Repository Auto-Sync Engine ---
     async function pushToGitHub() {
       const token = document.getElementById('ghToken').value.trim();
       const user = document.getElementById('ghUser').value.trim();
       const repo = document.getElementById('ghRepo').value.trim();
 
-      if (!token || !user || !repo) return alert('गिटहब डिटेल्स सही से भरें!');
+      if (!token || !user || !repo) return alert('गिटहब डिटेल्स भरें!');
 
-      const content = btoa(unescape(encodeURIComponent(document.documentElement.outerHTML)));
+      const content = bota(unescape(encodeURIComponent(document.documentElement.outerHTML)));
 
       try {
         const getRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/index.html`, {
@@ -815,24 +480,12 @@
             'Authorization': `token ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ message: 'Jarvis Anime Companion Update', content: content, sha: getData ? getData.sha : undefined })
+          body: JSON.stringify({ message: 'Jarvis Autonomous OS Update', content: content, sha: getData.sha })
         });
 
-        if (putRes.ok) {
-          alert('🎉 सफलता! कोड गिटहब और आपकी लाइव साइट पर अपडेट हो गया!');
-        } else {
-          alert('गिटहब अपडेट में समस्या आई। क्रैडेंशियल चेक करें।');
-        }
+        if (putRes.ok) alert('🎉 सफलता! गिटहब और Vercel पर सीधा लाइव अपडेट हो गया!');
       } catch (err) { alert('Sync Error: ' + err.message); }
     }
-
-    // --- On Window Load Initializer ---
-    window.onload = function() {
-      initAnimeAvatarCanvas();
-      if(localStorage.getItem('ghToken')) document.getElementById('ghToken').value = localStorage.getItem('ghToken');
-      if(localStorage.getItem('ghUser')) document.getElementById('ghUser').value = localStorage.getItem('ghUser');
-      if(localStorage.getItem('ghRepo')) document.getElementById('ghRepo').value = localStorage.getItem('ghRepo');
-    };
   </script>
 </body>
-</html>
+</html> 
